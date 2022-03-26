@@ -59,6 +59,7 @@ function displaySymbol(card) {
 // function to add opened cards to a list
 let openCardList = [];
 function addToOpenList(card) {
+  card.style.pointerEvents = "none";
   openCardList.push(card.firstElementChild.className);
 }
 
@@ -108,6 +109,20 @@ const openWin = function () {
   location.href = "win.html";
 };
 
+// timer functionality
+let second = 0;
+let minute = 0;
+let interval = setInterval(function () {
+  document.getElementById("seconds").innerHTML = second;
+  second++;
+  document.getElementById("minutes").innerHTML = minute;
+  if (second % 60 == 0) {
+    minute++;
+    second = 0;
+  }
+}, 1000);
+
+// game logic
 for (const card of cardsList) {
   card.addEventListener("click", function () {
     displaySymbol(card);
@@ -122,6 +137,7 @@ for (const card of cardsList) {
         lockOpen([cardEls[0], cardEls[1]]);
         // check for win sceneria
         if (matchedCards.length == 8) {
+          clearInterval(interval);
           setTimeout(openWin, 1500);
         }
         // else statement for when the two open cards dont match
@@ -134,19 +150,13 @@ for (const card of cardsList) {
         count--;
         // check if count = 0, then game over
         if (count == 0) {
+          clearInterval(interval);
           setTimeout(openLost, 1500);
         }
       }
     }
   });
 }
-
-// winning functionality
-// for (const card of cardsList) {
-//   if (card.classList.contains("open", "show", "match")) {
-//     console.log("you win");
-//   }
-// }
 
 /*
  * set up the event listener for a card. If a card is clicked:
@@ -158,3 +168,36 @@ for (const card of cardsList) {
  *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
+
+// for (const card of cardsList) {
+//   card.addEventListener("click", function () {
+//     displaySymbol(card);
+//     addToOpenList(card);
+//     cardEls.push(card);
+//     // check if two cards are open
+//     if (openCardList.length > 1) {
+//       increaseCounter();
+//       // check if the 2 opened cards match
+//       if (openCardList[0] == openCardList[1]) {
+//         matchedCards.push([cardEls[0], cardEls[1]]);
+//         lockOpen([cardEls[0], cardEls[1]]);
+//         // check for win sceneria
+//         if (matchedCards.length == 8) {
+//           setTimeout(openWin, 1500);
+//         }
+//         // else statement for when the two open cards dont match
+//       } else {
+//         animateCards(cardEls);
+//         setTimeout(hideSymbol, 1000, cardEls);
+//         // hide the cards then decrease the stars(life)
+//         stars[count - 1].classList.remove("fa-star");
+//         stars[count - 1].classList.add("fa-star-o");
+//         count--;
+//         // check if count = 0, then game over
+//         if (count == 0) {
+//           setTimeout(openLost, 1500);
+//         }
+//       }
+//     }
+//   });
+// }
